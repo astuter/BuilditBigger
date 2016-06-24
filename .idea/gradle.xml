@@ -8,19 +8,19 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/JokesBackend" />
+            <option value="$PROJECT_DIR$/JokerBackend" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/jokerAnroidLib" />
             <option value="$PROJECT_DIR$/jokerlib" />
-            <option value="$PROJECT_DIR$/showjokelib" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/JokesBackend" />
+            <option value="$PROJECT_DIR$/JokerBackend" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/jokerAnroidLib" />
             <option value="$PROJECT_DIR$/jokerlib" />
-            <option value="$PROJECT_DIR$/showjokelib" />
           </set>
         </option>
       </GradleProjectSettings>

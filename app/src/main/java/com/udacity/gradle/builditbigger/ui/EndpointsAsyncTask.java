@@ -1,11 +1,15 @@
 package com.udacity.gradle.builditbigger.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Pair;
 import android.widget.Toast;
 
-import com.astuter.builditbigger.jokesbackend.myApi.MyApi;
+import com.astuter.ShowJokeActivity;
+import com.astuter.builditbigger.jokerbackend.jokerApi.JokerApi;
+import com.astuter.builditbigger.jokerbackend.jokerApi.model.JokerBean;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
@@ -16,45 +20,55 @@ import java.io.IOException;
  */
 
 public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
-    private static MyApi myApiService = null;
-    private Context context;
+    private static JokerApi mJokerApi = null;
+    private Context mContext;
+    private ProgressDialog mProgressDialog;
+
+    public EndpointsAsyncTask(Context context) {
+        this.mContext = context;
+        mProgressDialog = ProgressDialog.show(mContext, "Getting Joke", "Please wait...", true);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        if (mProgressDialog != null) {
+            mProgressDialog.show();
+        }
+    }
 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
-        if(myApiService == null) {  // Only do this once
-            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+        if (mJokerApi == null) {  // Only do this once
+            JokerApi.Builder builder = new JokerApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
-                    .setRootUrl("https://android-app-backend.appspot.com/_ah/api/");
-
-//            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-//                    new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
-//                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    });
-            // end options for devappserver
-
-            myApiService = builder.build();
+                    .setRootUrl("https://builditbigger-1351.appspot.com/_ah/api/");
+            mJokerApi = builder.build();
         }
-
-        context = params[0].first;
-        String name = params[0].second;
-
         try {
-            return myApiService.sayHi(name).execute().getData();
+            return mJokerApi.sayJoke(new JokerBean()).execute().getJoke();
         } catch (IOException e) {
             return e.getMessage();
         }
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+    protected void onPostExecute(String joke) {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+//        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        if (joke != null) {
+            ShowJokeActivity(joke);
+        } else {
+            Toast.makeText(mContext, "Something went wrong while getting jokes.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void ShowJokeActivity(String joke) {
+        Intent intent = new Intent(mContext, ShowJokeActivity.class);
+        intent.putExtra(ShowJokeActivity.INTENT_JOKE, joke);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 }
