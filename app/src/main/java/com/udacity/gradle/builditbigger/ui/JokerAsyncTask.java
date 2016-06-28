@@ -19,12 +19,12 @@ import java.io.IOException;
  * Created by astuter on 23/06/16.
  */
 
-public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+public class JokerAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private static JokerApi mJokerApi = null;
     private Context mContext;
     private ProgressDialog mProgressDialog;
 
-    public EndpointsAsyncTask(Context context) {
+    public JokerAsyncTask(Context context) {
         this.mContext = context;
         mProgressDialog = ProgressDialog.show(mContext, "Getting Joke", "Please wait...", true);
     }

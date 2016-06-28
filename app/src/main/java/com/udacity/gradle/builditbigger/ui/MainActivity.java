@@ -44,6 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     public void tellJoke(View view) {
-        new EndpointsAsyncTask(MainActivity.this).execute();
+        new JokerAsyncTask(MainActivity.this).execute();
     }
 }
